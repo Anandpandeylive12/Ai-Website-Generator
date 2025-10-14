@@ -41,12 +41,11 @@ const Header = () => {
         {/* Get Started button */}
         <div className="hidden md:block">
         <SignInButton mode="modal" forceRedirectUrl="/workspace">
-        <Link href="/workspace">
-          <Button>
-            Get Started <ArrowBigRight className="ml-1" />
-          </Button>
-        </Link>
-        </SignInButton>
+  <Link href="/workspace">
+    <Button>Get Started <ArrowBigRight className="ml-1" /></Button>
+  </Link>
+</SignInButton>
+
         </div>
 
         {/* Mobile menu toggle */}

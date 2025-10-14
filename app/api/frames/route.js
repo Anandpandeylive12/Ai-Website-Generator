@@ -69,11 +69,35 @@ export async function PUT(req) {
       codeArray = [];
     }
 
+    // Wrap the new code inside the hero section layout
+    const wrappedCode = `
+<main>
+    <!-- Hero Section -->
+    <section class="bg-white dark:bg-gray-900">
+        <div class="max-w-screen-xl mx-auto px-4 py-8 lg:py-16 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <!-- Content -->
+            <div class="col-span-12 lg:col-span-7">
+                ${newCode}
+            </div>
+            <!-- Image/Mockup -->
+            <div class="col-span-12 lg:col-span-5 lg:flex hidden justify-center">
+                <div class="relative w-full max-w-lg">
+                    <img src="https://community.softr.io/uploads/db9110/original/2X/7/74e6e7e382d0ff5d7773ca9a87e6f6f8817a68a6.jpeg" 
+                        alt="Mockup" 
+                        class="rounded-lg shadow-lg"
+                    />
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+    `;
+
     // Add new code as structured object
     const newEntry = {
-      id: Date.now(),           // simple unique id
+      id: Date.now(),           // unique id
       title: title || `Component ${codeArray.length + 1}`,
-      code: newCode,
+      code: wrappedCode,
       timestamp: new Date().toISOString(),
     };
 

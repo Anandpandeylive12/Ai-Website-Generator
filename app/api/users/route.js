@@ -1,17 +1,22 @@
-// /app/api/users/route.js
+
 import { currentUser } from '@clerk/nextjs/server';
 import { db } from '@/config/db';
 import { usersTable } from '@/config/schema';
 import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
-export default async function POST(req) {
+export async function POST(req) {
   try {
     const user = await currentUser();
-    if (!user) return NextResponse.json({ error: "User not logged in" }, { status: 401 });
+    
+    if (!user) {
+      return NextResponse.json({ user: null, message: "Not logged in" }, { status: 200 });
+    }
 
     const email = user.primaryEmailAddress?.emailAddress;
-    if (!email) return NextResponse.json({ error: "User email not available" }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: "User email not available" }, { status: 400 });
+    }
 
     const userResult = await db.select().from(usersTable).where(eq(usersTable.email, email));
 

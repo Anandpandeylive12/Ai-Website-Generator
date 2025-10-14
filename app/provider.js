@@ -5,20 +5,24 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 const Provider = ({ children }) => {
-  const { user } = useUser();
+  const { isSignedIn, user } = useUser();
   const [userDetail, setUserDetail] = useState(null);
 
   useEffect(() => {
-    if (user && user.id) CreateNewUser();
-  }, [user]);
+    if (isSignedIn && user?.id) {
+      CreateNewUser();
+    }
+  }, [isSignedIn, user]);
 
   const CreateNewUser = async () => {
     try {
-      const result = await axios.post('/api/users', {
-        id: user.id,
-        email: user.primaryEmailAddress?.emailAddress,
-        name: user.fullName,
-      });
+      const result =await axios.post('/api/users', {
+  id: user.id,
+  email: user.primaryEmailAddress?.emailAddress,
+  name: user.fullName,
+}, {
+  headers: { 'Content-Type': 'application/json' }
+});
       setUserDetail(result.data.user);
       console.log('User credits:', result.data.user?.credits);
     } catch (error) {

@@ -1,5 +1,5 @@
 import { Outfit } from 'next/font/google';
-import  Provider  from './provider.jsx';
+import  Provider  from './provider.js';
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
