@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import axios from "axios";
 
 export const runtime = "nodejs"; // ✅ ensures Node stream support

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { db } from "@/config/db";
 import { chatTable, frameTable, projectTable } from "@/config/schema";
 import { currentUser } from "@clerk/nextjs/server";

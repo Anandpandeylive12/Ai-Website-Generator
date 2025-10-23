@@ -1,84 +1,112 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import WebpageTool, { HTML_CODE } from "./WebpageTool";
+import ElementSettingSection from "./ElementSettingSection";
 
 function WebsiteDesign({ generatedCode }) {
   const iframeRef = useRef(null);
+  const [selectedScreenSize, setselectedScreenSize] = useState("web");
 
-  // Initialize iframe shell once
-  useEffect(() => {
-    if (!iframeRef.current) return;
-    const doc = iframeRef.current.contentDocument;
-    if (!doc) return;
+ useEffect(() => {
+  if (!iframeRef.current) return;
+  const doc = iframeRef.current.contentDocument;
+  if (!doc) return;
 
-    doc.open();
-    doc.write(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta name="description" content="AI Website Builder - Modern TailwindCSS + Flowbite Template">
-          <title>AI Website Builder</title>
+  // Inject HTML
+  doc.open();
+  doc.write(HTML_CODE.replace("{code}", generatedCode || ""));
+  doc.close();
 
-          <!-- Tailwind CSS -->
-          <script src="https://cdn.tailwindcss.com"></script>
-
-          <!-- Flowbite CSS & JS -->
-          <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
-          <!-- Font Awesome / Lucide -->
-          <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
-          <!-- Chart.js -->
-          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-          <!-- AOS -->
-          <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-
-          <!-- GSAP -->
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-          <!-- Lottie -->
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.11.2/lottie.min.js"></script>
-
-          <!-- Swiper -->
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-          <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-
-          <!-- Tippy.js -->
-          <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
-          <script src="https://unpkg.com/@popperjs/core@2"></script>
-          <script src="https://unpkg.com/tippy.js@6"></script>
-      </head>
-      <body id="root"></body>
-      </html>
-    `);
-    doc.close();
-  }, []);
-
-  // Update body only when code changes
-  useEffect(() => {
-    if (!iframeRef.current) return;
-    const doc = iframeRef.current.contentDocument;
-    if (!doc) return;
-
-    const root = doc.getElementById("root");
-    if (root) {
-      root.innerHTML =
-        generatedCode
-          ?.replaceAll("```html", "")
-          .replaceAll("```", "")
-          .replace("html", "") ?? "";
+  // Wait until body exists
+  const waitForBody = () => {
+    if (!doc.body) {
+      requestAnimationFrame(waitForBody); // check again on next frame
+      return;
     }
-  }, [generatedCode]);
+
+    let hoverEl = null;
+    let selectedEl = null;
+
+    const handleMouseOver = (e) => {
+      if (selectedEl) return;
+      const target = e.target;
+      if (hoverEl && hoverEl !== target) hoverEl.style.outline = "";
+      hoverEl = target;
+      hoverEl.style.outline = "2px dotted blue";
+    };
+
+    const handleMouseOut = (e) => {
+      if (selectedEl) return;
+      if (hoverEl) hoverEl.style.outline = "";
+      hoverEl = null;
+    };
+
+    const handleClick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const target = e.target;
+      if (selectedEl && selectedEl !== target) {
+        selectedEl.style.outline = "";
+        selectedEl.removeAttribute("contenteditable");
+      }
+      selectedEl = target;
+      selectedEl.style.outline = "2px solid red";
+      selectedEl.setAttribute("contenteditable", "true");
+      selectedEl.focus();
+      selectedEl.addEventListener("blur", handleBlur);
+      console.log("Selected element:", selectedEl);
+    };
+
+    const handleBlur = () => {
+      if (selectedEl) console.log("Final edited element:", selectedEl.outerHTML);
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && selectedEl) {
+        selectedEl.style.outline = "";
+        selectedEl.removeAttribute("contenteditable");
+        selectedEl.removeEventListener("blur", handleBlur);
+        selectedEl = null;
+      }
+    };
+
+    doc.body.addEventListener("mouseover", handleMouseOver);
+    doc.body.addEventListener("mouseout", handleMouseOut);
+    doc.body.addEventListener("click", handleClick);
+    doc.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup
+    return () => {
+      if (doc.body) {
+        doc.body.removeEventListener("mouseover", handleMouseOver);
+        doc.body.removeEventListener("mouseout", handleMouseOut);
+        doc.body.removeEventListener("click", handleClick);
+        doc.removeEventListener("keydown", handleKeyDown);
+      }
+    };
+  };
+
+  waitForBody();
+}, [generatedCode]);
+
 
   return (
-    <iframe
-      ref={iframeRef}
-      className="w-full h-[600px] border rounded"
-      sandbox="allow-scripts allow-same-origin"
-    />
+    <div className="flex gap-2 w-full">
+    <div className="p-5 w-full flex justify-center items-center flex-col">
+      <iframe
+        ref={iframeRef}
+        className={`${
+          selectedScreenSize === "web" ? "w-full" : "w-130"
+        } h-full border-2 rounded-xl`}
+        sandbox="allow-scripts allow-same-origin"
+      />
+      <WebpageTool
+        selectedScreenSize={selectedScreenSize}
+        setselectedScreenSize={(v) => setselectedScreenSize(v)}
+        generatedCode={generatedCode}
+      />
+    </div>
+    <ElementSettingSection/>
+    </div>
   );
 }
 

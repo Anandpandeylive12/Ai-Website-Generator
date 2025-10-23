@@ -7,6 +7,7 @@ import WebsiteDesign from "../_components/WebsiteDesign";
 import { useParams, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
+import ElementSettingSection from "../_components/ElementSettingSection";
 
 // System prompt
 const systemPrompt =`
@@ -174,6 +175,7 @@ const PlayGround = () => {
           loading={loading}
         />
         <WebsiteDesign frameDetails={frameDetails} generatedCode={generatedCode} />
+        
       </div>
     </div>
   );

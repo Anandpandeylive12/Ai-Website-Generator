@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { db } from "@/config/db";
 import { chatTable } from "@/config/schema";
 import { NextResponse } from "next/server";
