@@ -57,7 +57,7 @@ const Hero = () => {
     }
    }
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 sm:px-6 lg:px-0">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 sm:px-6 lg:px-0 mt-10">
       {/* Header and description */}
       <h2 className="font-bold text-4xl sm:text-5xl md:text-6xl text-center">
         What Should We Design?
