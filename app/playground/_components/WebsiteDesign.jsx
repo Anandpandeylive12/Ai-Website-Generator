@@ -130,13 +130,13 @@ const onSaveCode = async () => {
 
     // Save to database via API
     await axios.put("/api/frames", {
-      newCode: html,          // raw HTML string
-      frameId,                // ensure this is defined in your component
-      projectId,              // ensure this is defined in your component
+      newCode: html,         
+      frameId,                
+      projectId,              
       title: "AI Generated Website",
     });
 
-    // Update local state/context
+    
     setOnSaveData && setOnSaveData(html);
 
     toast.success("Website saved successfully!");

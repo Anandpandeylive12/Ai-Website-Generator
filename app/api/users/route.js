@@ -18,16 +18,15 @@ export async function POST(req) {
       return NextResponse.json({ error: "User email not available" }, { status: 400 });
     }
 
-    // ✅ Insert user safely only if not exists
+    
     await db.insert(usersTable)
       .values({
         name: user.fullName ?? "NA",
         email,
         credits: 2
       })
-      .onConflictDoNothing(); // ✅ Prevents duplicate insert crash
+      .onConflictDoNothing(); 
 
-    // ✅ Return user from DB
     const existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email));
     return NextResponse.json({ user: existingUser[0] });
 

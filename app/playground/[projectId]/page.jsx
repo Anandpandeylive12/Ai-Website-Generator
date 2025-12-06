@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import ElementSettingSection from "../_components/ElementSettingSection";
 
-// System prompt
+
 const systemPrompt =`
 You are an expert AI web design assistant.
 
@@ -41,7 +41,7 @@ const PlayGround = () => {
   const [loading, setLoading] = useState(false);
   const [generatedCode, setGeneratedCode] = useState("");
 
-  // Fetch frame details
+  
   useEffect(() => {
     if (frameId) fetchFrameDetails();
   }, [frameId]);
@@ -116,7 +116,7 @@ const PlayGround = () => {
         }
       }
 
-      // Save **raw HTML string only**
+      
       if (isCode) await saveGeneratedCode(finalCode);
 
       // Add AI chat message

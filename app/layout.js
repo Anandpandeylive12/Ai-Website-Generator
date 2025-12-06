@@ -8,7 +8,7 @@ import { Toaster } from 'sonner';
 
 const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // choose any weights you want
+  weight: ["400", "500", "600", "700"], 
 });
 
 

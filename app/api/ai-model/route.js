@@ -2,13 +2,13 @@ export const dynamic = "force-dynamic";
 
 import axios from "axios";
 
-export const runtime = "nodejs"; // ✅ ensures Node stream support
+export const runtime = "nodejs"; 
 
 export async function POST(req) {
   try {
     const { messages } = await req.json();
 
-    // 🧠 Send request to OpenRouter API
+    
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
@@ -20,17 +20,17 @@ export async function POST(req) {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "http://localhost:3000", // ✅ use your real domain in production
+          "HTTP-Referer": "http://localhost:3000", 
           "X-Title": "My Next.js App",
         },
         responseType: "stream",
       }
     );
 
-    const upstream = response.data; // Node.js readable stream
+    const upstream = response.data; 
     const encoder = new TextEncoder();
 
-    // Convert Node stream to Web ReadableStream for Next.js
+   
     const readable = new ReadableStream({
       start(controller) {
         let buffer = "";
@@ -60,13 +60,13 @@ export async function POST(req) {
             const line = part.trim();
             if (!line) continue;
 
-            // Detect stream completion
+           
             if (line.includes("[DONE]")) {
               safeClose();
               return;
             }
 
-            // Handle each data line
+           
             const dataLines = line.split("\n").map((l) => l.trim());
             for (const dataLine of dataLines) {
               if (!dataLine.startsWith("data:")) continue;
@@ -86,7 +86,7 @@ export async function POST(req) {
             }
           }
 
-          // Push only new text since last chunk
+          
           if (accumulated.length > lastSentLength && !closed) {
             const newText = accumulated.slice(lastSentLength);
             controller.enqueue(encoder.encode(newText));
@@ -109,7 +109,7 @@ export async function POST(req) {
       },
     });
 
-    // ✅ Use `Response`, not `NextResponse`, for streaming
+    
     return new Response(readable, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",

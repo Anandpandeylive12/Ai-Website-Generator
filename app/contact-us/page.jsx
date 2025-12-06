@@ -71,7 +71,7 @@ const ContactUs = () => {
         </div>
       </section>
 
-      {/* Contact Info Section */}
+     
       <section className="py-20 px-4 md:px-12 max-w-5xl mx-auto grid md:grid-cols-3 gap-12 text-center">
         <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
           <Image src="/email-svgrepo-com.svg" width={50} height={50} alt="Email" className="mx-auto mb-4"/>
@@ -90,7 +90,7 @@ const ContactUs = () => {
         </div>
       </section>
 
-      {/* Map Section (Placeholder) */}
+      
       <section className="py-20 px-4 md:px-12">
         <h2 className="text-4xl font-bold text-center mb-8">Our Location</h2>
         <div className="w-full h-96 bg-gray-200 rounded-2xl flex items-center justify-center">
@@ -98,7 +98,7 @@ const ContactUs = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      
       <section className="py-20 px-4 md:px-12 text-center">
         <h2 className="text-4xl font-bold mb-6">
           Have a project in mind?
