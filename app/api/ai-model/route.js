@@ -12,7 +12,7 @@ export async function POST(req) {
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "google/gemini-2.5-flash-preview-09-2025",
+        model: "google/gemma-3-27b",
         messages,
         stream: true,
       },
